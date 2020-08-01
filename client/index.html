@@ -12,10 +12,6 @@
       body { font: 13px Helvetica, Arial; }
 
       form {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 0; 
         padding: 1rem;
       }
 
@@ -48,10 +44,43 @@
         font-weight: bold;
         border-radius: 1.25rem;
       }
+
+      ul {
+        width: 50%;
+        max-width: 600px;
+        border: 3px solid black;
+        border-radius: 5px;
+        overflow-y: auto;
+        height: 450px;
+        margin: 0 auto;
+      }
+
+      li:nth-child(even) {
+        padding: 1rem;
+        margin: 0.25rem;
+        border: 2px solid #ccc;
+        background-color: #ddd;
+      }
+
+      li:nth-child(odd) {
+        padding: 1rem;
+        margin: 0.25rem;
+        border: 2px solid #dedede;
+        background-color: #f1f1f1;
+      }
+
+      h2.chat-title {
+        text-align: center;
+      }
     </style>
   </head>
   <body>
     <h1>NestJS Chat Client</h1>
+    <div>
+      <label for="usercount">User count:</label> 
+      <span id="usercount">0</span>
+    </div>
+    <h2 class="chat-title">Chat Messages</h2>
     <ul id="messages"></ul>
     <form>
         <div id="name-container">
@@ -65,28 +94,32 @@
     </form>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
     <script>
-        const socket = io('http://localhost:8080');
-        const element = document.querySelector('form');
-        element.addEventListener('submit', event => {
-            event.preventDefault();
-            const name = document.getElementById('name').value.trim();
-            const elMessage =  document.getElementById('message');
-            const message = elMessage.value.trim();
-            if (name && message) {
-                // console.log(name, message);
-                socket.emit('chat-message', { name, message });
-                elMessage.value = '';            
-            }
-        });
+      const socket = io('http://localhost:8080');
+      const element = document.querySelector('form');
+      element.addEventListener('submit', event => {
+        event.preventDefault();
+        const name = document.getElementById('name').value.trim();
+        const elMessage =  document.getElementById('message');
+        const message = elMessage.value.trim();
+        if (name && message) {
+            // console.log(name, message);
+            socket.emit('chat-message', { name, message });
+            elMessage.value = '';            
+        }
+      });
 
-        socket.on('chat-message', data => {
-            // console.log('data', data);
-            const messages = document.getElementById('messages');
-            const li = document.createElement('li');
-            li.appendChild(document.createTextNode(data));
-            messages.appendChild(li);
-        });
+      socket.on('chat-message', data => {
+        // console.log('data', data);
+        const messages = document.getElementById('messages');
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(data));
+        messages.appendChild(li);
+      });
 
+      socket.on('users', data => {
+        const elUserCount = document.getElementById('usercount');
+        elUserCount.textContent = data;
+      });
     </script>
   </body>
 </html>

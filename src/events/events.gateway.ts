@@ -31,7 +31,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     handleChatMessage(@MessageBody() data: { name: string, message: string }) {
         const { name, message } = data;
         const event = 'chat-message';
-        const text = `${new Date().toISOString()}: ${name} said ${message}`;
+        const text = `${name} said ${message} at ${new Date().toISOString()}`;
         this.wss.emit(event, text);
         // return { 
         //     event, 
