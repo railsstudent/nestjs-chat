@@ -15,8 +15,8 @@ async function bootstrap() {
       max: 500, // limit each IP to 100 requests per windowMs
     }),
   );
-  const whitelist = ['http://localhost:8080', 'http://localhost:3002'];
   app.enableCors({ origin: (origin, callback) => {
+      const whitelist = ['http://localhost:8080', 'http://localhost:3002'];
       if (!origin) {
         return callback(null, true);
       }
