@@ -6,6 +6,8 @@ import { Server, Socket } from 'socket.io';
 export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect {
     private logger: Logger = new Logger('EventsGateway');
 
+    private userCount = 0;
+
     @WebSocketServer()
     wss: Server;
 
@@ -15,10 +17,14 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
 
     handleDisconnect(client: Socket) {
         this.logger.log(`Client disconnected: ${client.id}`);
+        this.userCount = this.userCount - 1;
+        this.wss.emit('users', this.userCount);
     }
 
     handleConnection(client: Socket, ...args: any[]) {
         this.logger.log(`Client connected: ${client.id}`);
+        this.userCount = this.userCount + 1;
+        this.wss.emit('users', this.userCount);
     }
 
     @SubscribeMessage('chat-message')
