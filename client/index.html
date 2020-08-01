@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+  <head>
+    <title>NestJS chat</title>
+    <meta charset="UTF-8">
+    <meta name="description" content="Socket io client">
+    <meta name="keywords" content="HTML, CSS, JavaScript">
+    <meta name="author" content="railsstudent">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+
+      form {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0; 
+        padding: 1rem;
+      }
+
+      label {
+        font-size: 1rem;
+      }
+
+      #name-container input {
+        line-height: 2rem;
+      }
+
+      #message-container {
+        display: flex;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+      }
+
+      #message-container > input {
+        flex: 1 1 auto;
+        margin-left: 1rem;
+        margin-right: 1rem;
+        line-height: 2rem;
+      }
+
+      button {
+        padding: 1rem;
+        font-size: 1rem;
+        background: red;
+        color: white;
+        font-weight: bold;
+        border-radius: 1.25rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>NestJS Chat Client</h1>
+    <ul id="messages"></ul>
+    <form>
+        <div id="name-container">
+            <label>Name: <input id="name" type="text" value="" placeholder="i.e. Joe Doe" autocomplete="off" /> </label>    
+        </div>
+        <div id="message-container">
+            <label>Message:  </label>
+            <input id="message" type="text" value="" placeholder="Your message" autocomplete="off" />
+        </div>
+        <button type="submit">Send</button>
+    </form>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+    <script>
+        const socket = io('http://localhost:8080');
+        const element = document.querySelector('form');
+        element.addEventListener('submit', event => {
+            event.preventDefault();
+            const name = document.getElementById('name').value.trim();
+            const elMessage =  document.getElementById('message');
+            const message = elMessage.value.trim();
+            if (name && message) {
+                // console.log(name, message);
+                socket.emit('chat-message', { name, message });
+                elMessage.value = '';            
+            }
+        });
+
+        socket.on('chat-message', data => {
+            // console.log('data', data);
+            const messages = document.getElementById('messages');
+            const li = document.createElement('li');
+            li.appendChild(document.createTextNode(data));
+            messages.appendChild(li);
+        });
+
+    </script>
+  </body>
+</html>
