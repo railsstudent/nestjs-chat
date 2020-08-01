@@ -16,6 +16,7 @@ export class EventsGateway implements OnGatewayInit, OnGatewayConnection, OnGate
     handleDisconnect(client: Socket) {
         this.logger.log(`Client disconnected: ${client.id}`);
     }
+
     handleConnection(client: Socket, ...args: any[]) {
         this.logger.log(`Client connected: ${client.id}`);
     }

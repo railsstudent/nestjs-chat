@@ -40,8 +40,10 @@ $ npm install
 
 ## Start Redis in docker
 
+```bash
 docker-compose -f docker-compose.development.yml up -d # create mysql, redis container for development environment
 docker-compose -f docker-compose.development.yml down  # remove created containers
+```
 
 ## Running the app
 
